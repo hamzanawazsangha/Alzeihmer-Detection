@@ -380,7 +380,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions, issues, or suggestions:
 - Open an issue on GitHub
 - Contact via LinkedIn
-- Email: [your-email@example.com]
+- Email: [iamhamzanawaz14@gmail.com]
 
 ## 🌟 Star History
 
