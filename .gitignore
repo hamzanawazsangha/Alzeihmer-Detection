@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Flask
+instance/
+.webassets-cache
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Logs
+*.log
+debug.log
+.cursor/
+
+# Environment variables
+.env
+.env.local
+
+# Model files (if large)
+# Uncomment if model is too large for GitHub
+# model/*.h5
+
+# Temporary files
+*.tmp
+*.bak

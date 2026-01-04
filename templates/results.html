@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - NeuroScan AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #0ea5e9;
+            --accent: #8b5cf6;
+            --accent-light: #a78bfa;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary), var(--accent-light));
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-large: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .ai-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 140px 0 80px;
+            background: linear-gradient(135deg, var(--background) 0%, #F1F5F9 100%);
+            min-height: 100vh;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card h1, .card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* Results Container */
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Image Preview */
+        .image-preview-section {
+            text-align: center;
+        }
+
+        .image-preview-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .image-preview {
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-large);
+            border: 3px solid var(--surface);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Prediction Section */
+        .prediction-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .prediction-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .prediction-card {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-card.high-confidence {
+            background: linear-gradient(135deg, var(--success), #34d399);
+        }
+
+        .prediction-card.medium-confidence {
+            background: linear-gradient(135deg, var(--warning), #fbbf24);
+        }
+
+        .prediction-card.low-confidence {
+            background: linear-gradient(135deg, var(--danger), #f87171);
+        }
+
+        .prediction-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .diagnosis-result {
+            margin-bottom: 1.5rem;
+        }
+
+        .condition-label {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .confidence-meter {
+            background: rgba(255,255,255,0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .confidence-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .confidence-bar {
+            background: rgba(255,255,255,0.3);
+            height: 20px;
+            border-radius: 10px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            background: white;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1.5s ease;
+        }
+
+        .confidence-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .confidence-info {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .confidence-info h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .confidence-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .confidence-info li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .confidence-info i {
+            color: var(--success);
+            font-size: 1.125rem;
+            margin-top: 0.125rem;
+        }
+
+        /* Recommendations Section */
+        .recommendations-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tip-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .tip-number {
+            background: var(--gradient-primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .tip-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Severity Section */
+        .severity-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .severity-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .severity-scale::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .severity-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .severity-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--border);
+            margin-bottom: 0.75rem;
+            border: 3px solid var(--surface);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .severity-level.active .severity-dot {
+            background: var(--gradient-primary);
+            transform: scale(1.2);
+        }
+
+        .severity-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .severity-level.active .severity-label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .current-indicator {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Action Section */
+        .action-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        /* Disclaimer Section */
+        .disclaimer-section {
+            margin-top: 2rem;
+        }
+
+        .disclaimer-card {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .disclaimer-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .disclaimer-card p {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .disclaimer-card li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: #856404;
+        }
+
+        .disclaimer-card i {
+            font-size: 1.125rem;
+            margin-top: 0.125rem;
+        }
+
+        .disclaimer-card .fa-check {
+            color: var(--success);
+        }
+
+        .disclaimer-card .fa-times {
+            color: var(--danger);
+        }
+
+        /* Resources Section */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .resource-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .resource-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .portfolio-footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-info {
+            max-width: 400px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo i {
+            color: var(--accent);
+        }
+
+        .footer-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer-bottom p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 100%;
+                flex-direction: column;
+                background: white;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow-hover);
+                padding: 2rem 0;
+                gap: 0;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-link {
+                padding: 1rem 2rem;
+                border-radius: 0;
+                justify-content: center;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .main-content {
+                padding: 120px 0 40px;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .severity-scale {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .severity-scale::before {
+                display: none;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .condition-label {
+                font-size: 1.5rem;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card h1, .card h2 {
+                font-size: 1.5rem;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav-menu, .action-buttons, .disclaimer-section, .portfolio-footer {
+                display: none;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .main-content {
+                padding: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header class="main-header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <span>NeuroScan<span class="ai-text">AI</span></span>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/detection" class="nav-link">
+                            <i class="fas fa-search"></i>
+                            <span>Detection</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/developer" class="nav-link">
+                            <i class="fas fa-book"></i>
+                            <span>Documentation</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="/detection" class="btn btn-primary btn-sm">
+                        <i class="fas fa-rocket"></i>
+                        Try Demo
+                    </a>
+                </div>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="card">
+                <h1><i class="fas fa-chart-line" style="color: var(--primary); margin-right: 0.5rem;"></i> MRI Analysis Results</h1>
+                <p>Detailed diagnosis and medical recommendations based on the AI analysis</p>
+                
+                <div class="results-container">
+                    <!-- Image Preview -->
+                    <div class="image-preview-section">
+                        <h3><i class="fas fa-image"></i> Analyzed MRI Scan</h3>
+                        <div class="image-preview">
+                            <img src="{{ image_data }}" alt="Analyzed MRI Scan" id="resultImage">
+                        </div>
+                    </div>
+
+                    <!-- Prediction Results -->
+                    <div class="prediction-section">
+                        <div class="prediction-card {% if confidence > 90 %}high-confidence{% elif confidence > 75 %}medium-confidence{% else %}low-confidence{% endif %}">
+                            <h3><i class="fas fa-diagnoses"></i> AI Diagnosis</h3>
+                            <div class="diagnosis-result">
+                                <span class="condition-label">{{ prediction }}</span>
+                                <div class="confidence-meter">
+                                    <div class="confidence-label">Confidence Level</div>
+                                    <div class="confidence-bar">
+                                        <div class="confidence-fill" style="width: {{ confidence }}%;"></div>
+                                    </div>
+                                    <div class="confidence-value">{{ confidence }}%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Confidence Interpretation -->
+                        <div class="confidence-info">
+                            <h4><i class="fas fa-info-circle"></i> Confidence Interpretation:</h4>
+                            <ul>
+                                {% if confidence > 90 %}
+                                <li><i class="fas fa-check-circle"></i> <strong>Very High Confidence:</strong> The AI model is highly certain about this diagnosis</li>
+                                {% elif confidence > 75 %}
+                                <li><i class="fas fa-exclamation-triangle"></i> <strong>High Confidence:</strong> The diagnosis is reliable but may benefit from professional verification</li>
+                                {% else %}
+                                <li><i class="fas fa-search"></i> <strong>Moderate Confidence:</strong> Consider consulting a healthcare professional for confirmation</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Medical Recommendations -->
+                    <div class="recommendations-section">
+                        <h3><i class="fas fa-lightbulb"></i> Medical Recommendations & Next Steps</h3>
+                        <div class="tips-grid">
+                            {% for tip in tips %}
+                            <div class="tip-card">
+                                <div class="tip-number">{{ loop.index }}</div>
+                                <div class="tip-content">{{ tip }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Severity Indicator -->
+                    <div class="severity-section">
+                        <h3><i class="fas fa-chart-bar"></i> Condition Severity Overview</h3>
+                        <div class="severity-scale">
+                            {% set severity_levels = {
+                                'No Impairment': 0,
+                                'Very Mild Impairment': 1,
+                                'Mild Impairment': 2,
+                                'Moderate Impairment': 3
+                            } %}
+                            {% set current_severity = severity_levels[prediction] %}
+                            
+                            {% for level, value in severity_levels.items() %}
+                            <div class="severity-level {% if value == current_severity %}active{% endif %}">
+                                <div class="severity-dot"></div>
+                                <div class="severity-label">{{ level }}</div>
+                                {% if value == current_severity %}
+                                <div class="current-indicator">Current</div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-section">
+                        <h3><i class="fas fa-tasks"></i> Recommended Actions</h3>
+                        <div class="action-buttons">
+                            <a href="/detection" class="btn btn-primary btn-lg">
+                                <i class="fas fa-redo"></i> Analyze Another Image
+                            </a>
+                            <button onclick="printResults()" class="btn btn-success btn-lg">
+                                <i class="fas fa-print"></i> Print Results
+                            </button>
+                            <button onclick="shareResults()" class="btn btn-warning btn-lg">
+                                <i class="fas fa-share-alt"></i> Share Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Medical Disclaimer -->
+                    <div class="disclaimer-section">
+                        <div class="disclaimer-card">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h4>
+                            <p>
+                                This AI analysis is for <strong>educational and screening purposes only</strong>. 
+                                It is not a substitute for professional medical diagnosis. Always consult with 
+                                qualified healthcare providers for medical advice and treatment decisions.
+                            </p>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Use this tool as a preliminary screening aid</li>
+                                <li><i class="fas fa-check"></i> Share results with your healthcare provider</li>
+                                <li><i class="fas fa-check"></i> Follow up with comprehensive medical evaluation</li>
+                                <li><i class="fas fa-times"></i> Do not make treatment decisions based solely on this analysis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Resources -->
+            <div class="card">
+                <h2><i class="fas fa-book-medical"></i> Additional Resources</h2>
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <h4>Alzheimer's Association</h4>
+                        <p>Comprehensive information about Alzheimer's disease, symptoms, and treatment options.</p>
+                        <a href="https://www.alz.org" target="_blank" class="btn btn-outline">Visit Website</a>
+                    </div>
+                    <div class="resource-card">
+                        <h4>Clinical Guidelines</h4>
+                        <p>Latest clinical practice guidelines for Alzheimer's diagnosis and management.</p>
+                        <a href="#" class="btn btn-outline">View Guidelines</a>
+                    </div>
+                    <div class="resource-card">
+                        <h4>Support Groups</h4>
+                        <p>Connect with support groups and communities for patients and caregivers.</p>
+                        <a href="#" class="btn btn-outline">Find Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="portfolio-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        NeuroScan AI
+                    </div>
+                    <p class="footer-description">
+                        A deep learning portfolio project demonstrating Alzheimer's disease detection from MRI scans using convolutional neural networks.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/hamzanawazsangha/" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/muhammad-hamza-nawaz-a434501b3/" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com/iam_hamzanawaz" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com/m.hamzanawazsangha" class="social-link">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Navigation</h3>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/detection">Detection</a></li>
+                            <li><a href="/developer">Documentation</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="#">Research Paper</a></li>
+                            <li><a href="https://www.kaggle.com/datasets/lukechugh/best-alzheimer-mri-dataset-99-accuracy">Dataset</a></li>
+                            <li><a href="https://github.com/hamzanawazsangha/NeuroScan-AI---Alzheimer-s-Detection-System">GitHub Repository</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NeuroScan AI - Alzheimer's Detection System | Portfolio Project</p>
+                <p class="disclaimer">
+                    <i class="fas fa-info-circle"></i>
+                    This is a demonstration project for educational purposes only.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+
+            // Animate confidence bar
+            const confidenceFill = document.querySelector('.confidence-fill');
+            if (confidenceFill) {
+                setTimeout(() => {
+                    confidenceFill.style.transition = 'width 1.5s ease-in-out';
+                }, 500);
+            }
+
+            // Add hover effects to tip cards
+            const tipCards = document.querySelectorAll('.tip-card');
+            tipCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = 'var(--shadow-hover)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'var(--shadow)';
+                });
+            });
+        });
+
+        function printResults() {
+            window.print();
+        }
+
+        function shareResults() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'NeuroScan AI - Alzheimer Analysis Results',
+                    text: `AI Diagnosis: {{ prediction }} (Confidence: {{ confidence }}%)`,
+                    url: window.location.href
+                })
+                .catch(error => console.log('Error sharing:', error));
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                alert('Share this page URL: ' + window.location.href);
+            }
+        }
+    </script>
+</body>
+</html>

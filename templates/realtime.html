@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Analysis - NeuroScan AI</title>
+    <!-- 3D Enhanced Design -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-3d.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Animated Particles Background -->
+    <div class="particles" id="particles"></div>
+    
+    <header>
+        <nav class="container">
+            <div class="logo">🧠 NeuroScan AI</div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/detection">Image Detection</a></li>
+                <li><a href="/realtime" class="active">Real-time Analysis</a></li>
+                <li><a href="/developer">Developer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <h1>Real-time Brain Structure Analysis</h1>
+            <p>Draw brain structures or upload simplified representations for instant analysis</p>
+            
+            <div class="canvas-container">
+                <canvas id="drawingCanvas" width="400" height="400"></canvas>
+                
+                <div class="controls">
+                    <button id="predictBtn" class="btn btn-primary">Analyze Drawing</button>
+                    <button id="clearBtn" class="btn btn-warning">Clear Canvas</button>
+                </div>
+            </div>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Analyzing brain structure... Please wait</p>
+            </div>
+            
+            <div id="realtimeResults" style="display: none;"></div>
+        </div>
+
+        <div class="card">
+            <h2>🎨 Drawing Guidelines</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <div>
+                    <h4>Brain Ventricles</h4>
+                    <p>Draw enlarged ventricles for impairment detection</p>
+                </div>
+                <div>
+                    <h4>Cortical Patterns</h4>
+                    <p>Show cortical thinning or shrinkage patterns</p>
+                </div>
+                <div>
+                    <h4>Hippocampus</h4>
+                    <p>Include hippocampus size variations</p>
+                </div>
+                <div>
+                    <h4>Overall Structure</h4>
+                    <p>Maintain proportional brain anatomy</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+            <h3>⚠️ Important Note</h3>
+            <p>This real-time analysis is for educational and demonstration purposes. For medical diagnosis, always use actual MRI scans and consult healthcare professionals.</p>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/3d-effects.js') }}"></script>
+</body>
+</html>

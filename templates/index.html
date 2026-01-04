@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroScan AI | Advanced Alzheimer's Detection System</title>
+    <!-- 3D Enhanced Design -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-3d.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/brain-scan.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #0ea5e9;
+            --accent: #8b5cf6;
+            --accent-light: #a78bfa;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary), var(--accent-light));
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-large: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .ai-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 140px 0 80px;
+            background: linear-gradient(135deg, var(--background) 0%, #F1F5F9 100%);
+            position: relative;
+            overflow: visible; /* Changed from hidden to visible */
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="%23f1f5f9"/></svg>');
+            background-size: cover;
+            z-index: 0;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text {
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            position: relative;
+            z-index: 1; /* Lower z-index so circle appears in front */
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .hero-title {
+            font-size: 3.25rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .highlight {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns for 4 cards */
+            gap: 1rem;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .stat {
+            background: var(--surface);
+            padding: 1.25rem 1rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: visible;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 16px 0 0 16px;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            padding: 0 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            padding: 0 0.5rem;
+        }
+
+        /* Brain Visualization */
+        .hero-visual {
+            opacity: 0;
+            animation: fadeIn 1s ease 0.5s forwards;
+            position: absolute; /* Changed to absolute positioning */
+            right: 10%; /* Position from right */
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100; /* Very high z-index to be in front */
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+
+        .brain-visualization {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        .brain-container {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .brain-orb {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            opacity: 0.2; /* More visible */
+            position: absolute;
+            animation: pulse 4s ease-in-out infinite;
+            z-index: 150; /* Very high z-index */
+            box-shadow: 0 0 80px rgba(37, 99, 235, 0.4),
+                        0 0 160px rgba(124, 58, 237, 0.3);
+            pointer-events: auto; /* Make orb interactive */
+        }
+
+        .brain-lobes {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            z-index: 160; /* Above the orb */
+            pointer-events: auto;
+        }
+
+        .lobe {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(161, 196, 253, 0.4);
+            border: 2px solid rgba(123, 104, 238, 0.5);
+            animation: pulse 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 170; /* Above brain lobes container */
+            pointer-events: auto;
+        }
+
+        .lobe.frontal {
+            width: 120px;
+            height: 120px;
+            top: 20px;
+            left: 90px;
+            animation-delay: 0s;
+        }
+
+        .lobe.parietal {
+            width: 100px;
+            height: 100px;
+            top: 150px;
+            left: 30px;
+            animation-delay: 1s;
+        }
+
+        .lobe.temporal {
+            width: 100px;
+            height: 100px;
+            top: 150px;
+            right: 30px;
+            animation-delay: 2s;
+        }
+
+        .lobe.occipital {
+            width: 80px;
+            height: 80px;
+            top: 220px;
+            left: 110px;
+            animation-delay: 3s;
+        }
+
+        .scan-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(123, 104, 238, 0.3), transparent);
+            animation: scan 3s linear infinite;
+            z-index: 180; /* Above all brain elements */
+            pointer-events: none;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 5rem 0;
+            background: var(--surface);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 1px solid var(--border);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.4s; }
+        .feature-card:nth-child(2) { animation-delay: 0.6s; }
+        .feature-card:nth-child(3) { animation-delay: 0.8s; }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-list i {
+            color: var(--primary);
+        }
+
+        /* Evaluation Section */
+        .evaluation-section {
+            padding: 5rem 0;
+            background: var(--background);
+        }
+
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .evaluation-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .evaluation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .evaluation-card:nth-child(1) { animation-delay: 0.3s; }
+        .evaluation-card:nth-child(2) { animation-delay: 0.4s; }
+        .evaluation-card:nth-child(3) { animation-delay: 0.5s; }
+        .evaluation-card:nth-child(4) { animation-delay: 0.6s; }
+
+        .evaluation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .evaluation-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .evaluation-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .evaluation-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .evaluation-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .evaluation-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Performance Section */
+        .performance-section {
+            padding: 5rem 0;
+            background: var(--surface);
+        }
+
+        .performance-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .performance-chart {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .performance-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .performance-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .performance-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--background);
+            border-radius: 12px;
+        }
+
+        .performance-stat .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .performance-stat .label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            padding: 5rem 0;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+            z-index: 0;
+        }
+
+        .demo-content {
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.3s forwards;
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-text h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .demo-text p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .portfolio-footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-info {
+            max-width: 400px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo i {
+            color: var(--accent);
+        }
+
+        .footer-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer-bottom p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer {
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content, .performance-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+            
+            .hero-title {
+                font-size: 2.75rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 100%;
+                flex-direction: column;
+                background: white;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow-hover);
+                padding: 2rem 0;
+                gap: 0;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-link {
+                padding: 1rem 2rem;
+                border-radius: 0;
+                justify-content: center;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .hero-title {
+                font-size: 2.25rem;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid,
+            .evaluation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .brain-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .brain-lobes {
+                width: 250px;
+                height: 250px;
+            }
+
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .stat {
+                min-height: 100px;
+                padding: 1rem 0.75rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .hero-stats, .performance-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat {
+                min-height: 90px;
+                padding: 1rem 0.75rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Particles Background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Header with Navigation -->
+    <header class="main-header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <span>NeuroScan<span class="ai-text">AI</span></span>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link active">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/detection" class="nav-link">
+                            <i class="fas fa-search"></i>
+                            <span>Detection</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/developer" class="nav-link">
+                            <i class="fas fa-book"></i>
+                            <span>Documentation</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="/detection" class="btn btn-primary btn-sm">
+                        <i class="fas fa-rocket"></i>
+                        Try Demo
+                    </a>
+                </div>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="badge">
+                        <i class="fas fa-graduation-cap"></i>
+                        Portfolio Project • Deep Learning
+                    </div>
+                    <h1 class="hero-title">
+                        Advanced Alzheimer's Detection <span class="highlight">Using CNN</span>
+                    </h1>
+                    <p class="hero-description">
+                        A state-of-the-art deep learning system that classifies Alzheimer's disease from MRI scans with 99.2% accuracy using EfficientNetB0 transfer learning.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="/detection" class="btn btn-primary btn-lg">
+                            <i class="fas fa-brain"></i>
+                            Live Demo
+                        </a>
+                        <a href="#documentation" class="btn btn-outline btn-lg">
+                            <i class="fas fa-book"></i>
+                            Documentation
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat card-3d">
+                            <div class="stat-number">99.2%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                        <div class="stat card-3d">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Classes</div>
+                        </div>
+                        <div class="stat card-3d">
+                            <div class="stat-number">1.00</div>
+                            <div class="stat-label">AUC Score</div>
+                        </div>
+                        <div class="stat card-3d">
+                            <div class="stat-number">EfficientNetB0</div>
+                            <div class="stat-label">Architecture</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="brain-visualization">
+                        <div class="brain-container">
+                            <div class="brain-orb"></div>
+                            <div class="brain-lobes">
+                                <div class="lobe frontal">Frontal</div>
+                                <div class="lobe parietal">Parietal</div>
+                                <div class="lobe temporal">Temporal</div>
+                                <div class="lobe occipital">Occipital</div>
+                            </div>
+                            <div class="scan-effect"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Technical Features</h2>
+                <p>Advanced deep learning implementation for medical image analysis</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Model Architecture</h3>
+                    <p>EfficientNetB0 with transfer learning, fine-tuned on block5a_expand_activation onward</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Pre-trained on ImageNet</li>
+                        <li><i class="fas fa-check"></i> Custom classification head</li>
+                        <li><i class="fas fa-check"></i> Batch normalization layers</li>
+                        <li><i class="fas fa-check"></i> Dropout regularization</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Dataset & Training</h3>
+                    <p>10,240 training images and 1,279 test images across four balanced classes</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Mild Impairment</li>
+                        <li><i class="fas fa-check"></i> Moderate Impairment</li>
+                        <li><i class="fas fa-check"></i> No Impairment</li>
+                        <li><i class="fas fa-check"></i> Very Mild Impairment</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Training Strategy</h3>
+                    <p>Optimized training with advanced techniques for maximum performance</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Adam optimizer (lr=0.001)</li>
+                        <li><i class="fas fa-check"></i> Early stopping</li>
+                        <li><i class="fas fa-check"></i> ReduceLROnPlateau</li>
+                        <li><i class="fas fa-check"></i> L2 regularization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evaluation Section -->
+    <section class="evaluation-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Model Evaluation Metrics</h2>
+                <p>Comprehensive performance metrics demonstrating model effectiveness</p>
+            </div>
+            <div class="evaluation-grid">
+                <div class="evaluation-card">
+                    <div class="evaluation-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="evaluation-title">Accuracy</div>
+                    <div class="evaluation-value">99.2%</div>
+                    <div class="evaluation-label">Overall Performance</div>
+                </div>
+                <div class="evaluation-card">
+                    <div class="evaluation-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="evaluation-title">Classes</div>
+                    <div class="evaluation-value">4</div>
+                    <div class="evaluation-label">Alzheimer's Stages</div>
+                </div>
+                <div class="evaluation-card">
+                    <div class="evaluation-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="evaluation-title">AUC Score</div>
+                    <div class="evaluation-value">1.00</div>
+                    <div class="evaluation-label">Perfect Classification</div>
+                </div>
+                <div class="evaluation-card">
+                    <div class="evaluation-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="evaluation-title">Backend</div>
+                    <div class="evaluation-value">Flask</div>
+                    <div class="evaluation-label">Python Framework</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section class="performance-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Performance Analysis</h2>
+                <p>Detailed evaluation of classification performance across all categories</p>
+            </div>
+            <div class="performance-content">
+                <div class="performance-chart">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="performance-text">
+                    <h3>Exceptional Classification Results</h3>
+                    <p>Our model achieves near-perfect performance across all Alzheimer's disease stages, demonstrating robust feature extraction and classification capabilities.</p>
+                    <p>The confusion matrix shows minimal misclassification, with the model correctly identifying even subtle differences between disease stages.</p>
+                    <div class="performance-stats">
+                        <div class="performance-stat">
+                            <div class="value">99.2%</div>
+                            <div class="label">Overall Accuracy</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="value">98.8%</div>
+                            <div class="label">Precision</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="value">99.1%</div>
+                            <div class="label">Recall</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="value">99.0%</div>
+                            <div class="label">F1-Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo CTA -->
+    <section class="demo-section">
+        <div class="container">
+            <div class="demo-content">
+                <div class="demo-text">
+                    <h2>Experience the Live Demo</h2>
+                    <p>Test the Alzheimer's detection system with your own MRI images or use our sample dataset</p>
+                </div>
+                <div class="demo-actions">
+                    <a href="/detection" class="btn btn-primary btn-lg" style="background: rgba(255,255,255,0.2); border: 2px solid white;">
+                        <i class="fas fa-brain"></i>
+                        Try Image Detection
+                    </a>
+                    <a href="/developer" class="btn btn-outline btn-lg" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
+                        <i class="fas fa-book"></i>
+                        View Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="portfolio-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <i class="fas fa-brain"></i>
+                        NeuroScan AI
+                    </div>
+                    <p class="footer-description">
+                        A deep learning portfolio project demonstrating Alzheimer's disease detection from MRI scans using convolutional neural networks.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/hamzanawazsangha/" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/muhammad-hamza-nawaz-a434501b3/" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com/iam_hamzanawaz" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com/m.hamzanawazsangha" class="social-link">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Navigation</h3>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/detection">Detection</a></li>
+                            <li><a href="/developer">Documentation</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="#">Research Paper</a></li>
+                            <li><a href="https://www.kaggle.com/datasets/lukechugh/best-alzheimer-mri-dataset-99-accuracy">Dataset</a></li>
+                            <li><a href="https://github.com/hamzanawazsangha/NeuroScan-AI---Alzheimer-s-Detection-System">GitHub Repository</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NeuroScan AI - Alzheimer's Detection System | Portfolio Project</p>
+                <p class="disclaimer">
+                    <i class="fas fa-info-circle"></i>
+                    This is a demonstration project for educational purposes only.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Performance Chart
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'AUC Score', 'Specificity'],
+                    datasets: [{
+                        label: 'Model Performance',
+                        data: [99.2, 98.8, 99.1, 99.0, 100, 99.3],
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(37, 99, 235, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            suggestedMin: 90,
+                            suggestedMax: 100,
+                            ticks: {
+                                backdropColor: 'transparent'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/3d-effects.js') }}"></script>
+</body>
+</html>
