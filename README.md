@@ -363,6 +363,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Muhammad Hamza Nawaz**
+- 🎓 **Data Scientist**
+- 🏛️ **Al-khawarizmi Institute of Computer Science**
 - GitHub: [@hamzanawazsangha](https://github.com/hamzanawazsangha/)
 - LinkedIn: [Muhammad Hamza Nawaz](https://www.linkedin.com/in/muhammad-hamza-nawaz-a434501b3/)
 - Instagram: [@iam_hamzanawaz](https://instagram.com/iam_hamzanawaz)
@@ -378,16 +380,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For questions, issues, or suggestions:
-- Open an issue on GitHub
-- Contact via LinkedIn
-- Email: [iamhamzanawaz14@gmail.com]
-
-## 🌟 Star History
-
-If you find this project helpful, please consider giving it a star ⭐
+- 📧 **Email**: [iamhamzanawaz14@gmail.com](iamhamzanawaz14@gmail.com)
+- 💬 **Issues**: [GitHub Issues](https://github.com/hamzanawazsangha/NeuroScan-AI---Alzheimer-s-Detection-System/issues) 
+- 📚 **Documentation**: [Full Documentation](docs/)
 
 ---
 
-**Made with ❤️ for advancing AI in healthcare**
+**Developed with ❤️ at Al-khawarizmi Institute of Computer Science, UET Lahore**
 
 *Last Updated: January 2026*
+
+<div align="center">
+
+**⭐ Don't forget to star this repository if you find it helpful!**
+
+[![Star History Chart](https://api.star-history.com/svg?repos=hamzanawazsangha/neuroscan-ai&type=Date)](https://star-history.com/#hamzanawazsangha/neuroscan-ai&Date)
+
+</div>
